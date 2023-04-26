@@ -10,8 +10,8 @@ async function displayNotes(contract) {
     notesContainer.innerHTML = ""; // Clear the container before adding new notes
 
     const noteCount = await contract.methods.notesIds().call(); // Call the getNoteCount function
-
-    for (let noteId = 0; noteId <= noteCount; noteId++) {
+    console.log(noteCount);
+    for (let noteId = 0; noteId < noteCount; noteId++) {
         const noteData = await contract.methods.readNote(noteId).call();
         
         // Skip the note if the content is empty
