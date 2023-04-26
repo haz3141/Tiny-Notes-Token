@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract TinyNotesToken is ERC20 {
     using Counters for Counters.Counter;
-    Counters.Counter private _noteIds;
+    Counters.Counter public noteIds;
 
     struct Note {
         address creator;
@@ -27,9 +27,9 @@ contract TinyNotesToken is ERC20 {
 
     function createNote(string memory _title, string memory _content) public {
         require(balanceOf(msg.sender) > 0, "Must hold TNT to create a Note.");
-        _noteIds.increment();
-        idToNote[_noteIds.current()] = Note(msg.sender, _title, _content);
-        emit NoteCreated(_noteIds.current(), msg.sender, _title, _content);
+        noteIds.increment();
+        idToNote[noteIds.current()] = Note(msg.sender, _title, _content);
+        emit NoteCreated(noteIds.current(), msg.sender, _title, _content);
     }
 
     function readNote(uint256 _noteId) public view returns (string memory title, string memory content) {
