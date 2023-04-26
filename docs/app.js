@@ -9,10 +9,16 @@ async function displayNotes(contract) {
     const notesContainer = document.getElementById("notes");
     notesContainer.innerHTML = ""; // Clear the container before adding new notes
 
-    const noteIds = await contract.methods.noteIds().call(); // Use the public noteIds getter
+    const noteCount = await contract.methods.notesIds().call(); // Call the getNoteCount function
 
-    for (const noteId of noteIds) {
+    for (let noteId = 0; noteId <= noteCount; noteId++) {
         const noteData = await contract.methods.readNote(noteId).call();
+        
+        // Skip the note if the content is empty
+        if (noteData.content === "") {
+            continue;
+        }
+
         const noteElement = document.createElement("div");
         noteElement.className = "note";
         noteElement.innerHTML = `
@@ -24,7 +30,6 @@ async function displayNotes(contract) {
         notesContainer.appendChild(noteElement);
     }
 }
-
 
 window.addEventListener('load', async () => {
     if (window.ethereum) {
