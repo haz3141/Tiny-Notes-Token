@@ -51,6 +51,75 @@
 				"inputs": [
 					{
 						"indexed": true,
+						"internalType": "uint256",
+						"name": "noteId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "creator",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "content",
+						"type": "string"
+					}
+				],
+				"name": "NoteCreated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "noteId",
+						"type": "uint256"
+					}
+				],
+				"name": "NoteDeleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "noteId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "newTitle",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "newContent",
+						"type": "string"
+					}
+				],
+				"name": "NoteUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
 						"internalType": "address",
 						"name": "from",
 						"type": "address"
@@ -190,6 +259,19 @@
 						"type": "bool"
 					}
 				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_noteId",
+						"type": "uint256"
+					}
+				],
+				"name": "deleteNote",
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -467,11 +549,11 @@
 			]
 		},
 		"contracts/TinyNotesToken.sol": {
-			"keccak256": "0x1644fc76b17a7fb5deb3263d8e63806de6e0fed98b8cfe4a4dc55a69c741e37e",
+			"keccak256": "0xe0ba1bd5d98b21cdf4bcf619d21cce2affc4bda250eb24c3fb6f23b51e0857bb",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://a9c4a187185c4147c914cefc383179e7fb9a4f33b4ea5bae5f78e5df41d6ad60",
-				"dweb:/ipfs/QmegAvreibUQzJ32ZpuB8vGPHAQwvbRSYnur3jdZwXFeqG"
+				"bzz-raw://6da37d94aa7a4a67feb887a808b5fdc5e71446328243788062525e37b1ef3437",
+				"dweb:/ipfs/QmXZMsiLPmoCftcUoC4A2jijmDpnLK3hK4FQ6T4q4fDPAd"
 			]
 		}
 	},
