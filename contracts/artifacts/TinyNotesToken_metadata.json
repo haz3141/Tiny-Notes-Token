@@ -6,7 +6,18 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_genesisTitle",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_genesisContent",
+						"type": "string"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
@@ -321,6 +332,29 @@
 				],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_noteId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_newTitle",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_newContent",
+						"type": "string"
+					}
+				],
+				"name": "updateNote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -433,11 +467,11 @@
 			]
 		},
 		"contracts/TinyNotesToken.sol": {
-			"keccak256": "0x7b4dd9cf8f44f43bc035a18e4e4522782df1f7cc8606b97a8ec2b851f681b582",
+			"keccak256": "0x1644fc76b17a7fb5deb3263d8e63806de6e0fed98b8cfe4a4dc55a69c741e37e",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://808dc4cbe0c80a70e6dbbc0c7b2fb23f6183c07416408741914fc96ffb5bcbfc",
-				"dweb:/ipfs/QmUcS18w1cAKiFndsZ2JXsDYARYzBFHg8u99qnMQWMRMnp"
+				"bzz-raw://a9c4a187185c4147c914cefc383179e7fb9a4f33b4ea5bae5f78e5df41d6ad60",
+				"dweb:/ipfs/QmegAvreibUQzJ32ZpuB8vGPHAQwvbRSYnur3jdZwXFeqG"
 			]
 		}
 	},

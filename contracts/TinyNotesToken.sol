@@ -16,23 +16,25 @@ contract TinyNotesToken is ERC20 {
 
     mapping(uint256 => Note) private idToNote;
 
-    constructor() ERC20("Tiny Notes Token", "TNT") {
+    constructor(string memory _genesisTitle, string memory _genesisContent) ERC20("Tiny Notes Token", "TNT") {
         _mint(msg.sender, 47000000 * 10 ** decimals());
+        idToNote[0] = Note(msg.sender, _genesisTitle, _genesisContent);
     }
 
     function createNote(string memory _title, string memory _content) public {
         require(balanceOf(address(msg.sender)) > 0, "Must hold TNT to create a Note.");
         _noteIds.increment();
-        uint256 newNoteId = _noteIds.current();
-        idToNote[newNoteId] = Note(
-            msg.sender,
-            _title,
-            _content
-        );
+        idToNote[_noteIds.current()] = Note(msg.sender, _title, _content);
     }
 
     function readNote(uint256 _noteId) public view returns (string memory title, string memory content) {
         Note memory note = idToNote[_noteId];
         return (note.title, note.content);
+    }
+
+    function updateNote(uint256 _noteId, string memory _newTitle, string memory _newContent) public {
+        require(idToNote[_noteId].creator == msg.sender, "Only the creator may update a Note.");
+        idToNote[_noteId].title = _newTitle;
+        idToNote[_noteId].content = _newContent;
     }
 }
