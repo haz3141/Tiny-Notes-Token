@@ -9,9 +9,9 @@ async function displayNotes(contract) {
     const notesContainer = document.getElementById("notes");
     notesContainer.innerHTML = ""; // Clear the container before adding new notes
 
-    const noteCount = await contract.methods.notesIds().call(); // Call the getNoteCount function
-    console.log(noteCount);
-    for (let noteId = 0; noteId < noteCount; noteId++) {
+    const noteCount = await contract.methods.noteIds().call(); // Call the getNoteCount function
+
+    for (let noteId = 0; noteId <= noteCount; noteId++) {
         const noteData = await contract.methods.readNote(noteId).call();
         
         // Skip the note if the content is empty
@@ -44,7 +44,7 @@ window.addEventListener('load', async () => {
     document.getElementById('account').innerText = `Account: ${account}`;
 
     const contractABI = await getContractABI();
-    const contractAddress = '0x829eA7CE136c24Dfc2A792AbeD4c71dF0047391b';
+    const contractAddress = '0x0052474e9EED5450fD671DE04F67fa2c46e1f95B';
 
     const contract = new web3.eth.Contract(contractABI, contractAddress);
 
