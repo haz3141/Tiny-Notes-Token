@@ -313,6 +313,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "noteIds",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "_value",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -549,11 +562,11 @@
 			]
 		},
 		"contracts/TinyNotesToken.sol": {
-			"keccak256": "0xe0ba1bd5d98b21cdf4bcf619d21cce2affc4bda250eb24c3fb6f23b51e0857bb",
+			"keccak256": "0x083fb35ff2dc6c2255ab5480f9b7664188fe0daf4739a10585b0953906e9974e",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://6da37d94aa7a4a67feb887a808b5fdc5e71446328243788062525e37b1ef3437",
-				"dweb:/ipfs/QmXZMsiLPmoCftcUoC4A2jijmDpnLK3hK4FQ6T4q4fDPAd"
+				"bzz-raw://0832a5086d8cd28967b49187d8c84fccc996f4e6c7a8bd40631bf1cbc0014be4",
+				"dweb:/ipfs/QmXqCtGz82ycpfdmgCAk8xmdjwZrXHjCbwfD2JvEY1cxfB"
 			]
 		}
 	},
