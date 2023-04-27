@@ -41,8 +41,13 @@ window.addEventListener('load', async () => {
     if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         await window.ethereum.enable();
+
+        // Hide the "no-metamask" message
+        document.getElementById('no-metamask').style.display = 'none';
     } else {
         console.error('No web3 detected.');
+        // Show the "no-metamask" message
+        document.getElementById('no-metamask').style.display = 'block';
     }
 
     const accounts = await web3.eth.getAccounts();
