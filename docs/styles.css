@@ -43,6 +43,7 @@ h1 {
     padding: 1rem;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1rem;
 }
 
 #no-metamask {
@@ -89,9 +90,32 @@ button {
 }
 
 .note {
-    background-color: #fff;
+    background-color: #fefac0; /* Yellow background for a post-it note look */
     padding: 1rem;
     margin-bottom: 1rem;
     border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.note:before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 0;
+    top: 0;
+    border-bottom: 10px solid #fefac0;
+    border-right: 10px solid transparent;
+}
+
+.note:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    right: 0;
+    bottom: 0;
+    border-top: 10px solid #fefac0;
+    border-left: 10px solid transparent;
 }
