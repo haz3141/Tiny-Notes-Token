@@ -3,21 +3,46 @@ body {
     max-width: 600px;
     margin: 0 auto;
     padding: 1rem;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
 .header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    background-color: #333;
+    color: #fff;
+    padding: 0.5rem 1rem;
+}
+
+h1 {
+    margin: 0;
 }
 
 #request-tokens {
     margin-left: 1rem;
     margin-bottom: 0rem;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0.5rem 1rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
 }
 
 #note-form {
     display: flex;
     flex-direction: column;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 #no-metamask {
@@ -27,8 +52,46 @@ body {
     font-size: 1.5rem;
     text-align: center;
     color: red;
-  }
+}
+
+#account {
+    font-size: 1rem;
+    background-color: #fff;
+    color: #333;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1rem;
+    word-break: break-all;
+}
 
 input, textarea, button {
     margin-bottom: 1rem;
+}
+
+input, textarea {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 0.5rem;
+}
+
+button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+.note {
+    background-color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 }

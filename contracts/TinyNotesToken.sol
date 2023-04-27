@@ -34,7 +34,7 @@ contract TinyNotesToken is ERC20 {
 
     function readNote(uint256 _noteId) public view returns (string memory title, string memory content) {
         Note memory note = idToNote[_noteId];
-        return (note.title, note.content);
+        return (note.creator, note.title, note.content);
     }
 
     function updateNote(uint256 _noteId, string memory _newTitle, string memory _newContent) public {

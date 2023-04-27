@@ -11,31 +11,34 @@ async function getFaucetContractABI() {
     return data;
 }
 
-async function displayNotes(contract) {
+async function displayNotes(tokenContract) {
     const notesContainer = document.getElementById("notes");
     notesContainer.innerHTML = ""; // Clear the container before adding new notes
 
-    const noteCount = await contract.methods.noteIds().call(); // Call the getNoteCount function
+    const noteCount = await tokenContract.methods.noteIds().call();
+    
+    for (let noteId = 0; noteId < noteCount; noteId++) {
+        try {
+            const noteData = await tokenContract.methods.readNote(noteId).call();
+            if (noteData.title !== "") {
+                const noteElement = document.createElement("div");
+                noteElement.className = "note";
+                noteElement.innerHTML = `
+                  <h3>${noteData.title}</h3>
+                  <p>${noteData.content}</p>
+                  <p>Created by: ${noteData.creator}</p>
+                  <button onclick="updateNote(${noteId})">Update</button>
+                  <button onclick="deleteNote(${noteId})">Delete</button>
+                `;
 
-    for (let noteId = 0; noteId <= noteCount; noteId++) {
-        const noteData = await contract.methods.readNote(noteId).call();
-        
-        // Skip the note if the content is empty
-        if (noteData.content === "") {
-            continue;
+                notesContainer.appendChild(noteElement);
+            }
+        } catch (error) {
+            console.error("Error while fetching note", noteId, error);
         }
-
-        const noteElement = document.createElement("div");
-        noteElement.className = "note";
-        noteElement.innerHTML = `
-            <h3>${noteData.title}</h3>
-            <p>${noteData.content}</p>
-            <button onclick="updateNote(${noteId})">Update</button>
-            <button onclick="deleteNote(${noteId})">Delete</button>
-        `;
-        notesContainer.appendChild(noteElement);
     }
 }
+
 
 window.addEventListener('load', async () => {
     if (window.ethereum) {
