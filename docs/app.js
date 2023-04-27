@@ -5,6 +5,12 @@ async function getContractABI() {
     return data;
 }
 
+async function getFaucetContractABI() {
+    const response = await fetch('./abis/TinyNotesTokenFaucetABI.json');
+    const data = await response.json();
+    return data;
+}
+
 async function displayNotes(contract) {
     const notesContainer = document.getElementById("notes");
     notesContainer.innerHTML = ""; // Clear the container before adding new notes
@@ -43,21 +49,32 @@ window.addEventListener('load', async () => {
     const account = accounts[0];
     document.getElementById('account').innerText = `Account: ${account}`;
 
-    const contractABI = await getContractABI();
-    const contractAddress = '0x0052474e9EED5450fD671DE04F67fa2c46e1f95B';
+    const tokenContractABI = await getContractABI();
+    const tokenContractAddress = '0x0052474e9EED5450fD671DE04F67fa2c46e1f95B';
 
-    const contract = new web3.eth.Contract(contractABI, contractAddress);
+    const tokenContract = new web3.eth.Contract(tokenContractABI, tokenContractAddress);
+
+    const faucetContractABI = await getFaucetContractABI();
+    const faucetContractAddress = '0xf7C177ef8FFB35d200e34b64C485f6544568d1A7';
+
+    const faucetContract = new web3.eth.Contract(faucetContractABI, faucetContractAddress);
 
     document.getElementById('create-note').addEventListener('click', async () => {
         const title = document.getElementById('title').value;
         const content = document.getElementById('content').value;
         
-        await contract.methods.createNote(title, content).send({ from: account });
+        await tokenContract.methods.createNote(title, content).send({ from: account });
         alert('Note created!');
-        await displayNotes(contract);
+
+        await displayNotes(tokenContract);
     });
+
+    document.getElementById('request-tokens').addEventListener('click', async () => {
+        await faucetContract.methods.requestTokens().send({ from: account });
+        alert('Tokens requested!');
+    });    
 
     // Add event listeners for other contract functions (e.g., readNote, updateNote, deleteNote)
 
-    await displayNotes(contract);
+    await displayNotes(tokenContract);
 });

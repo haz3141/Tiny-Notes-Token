@@ -5,6 +5,16 @@ body {
     padding: 1rem;
 }
 
+.header {
+    display: flex;
+    align-items: center;
+}
+
+#request-tokens {
+    margin-left: 1rem;
+    margin-bottom: 0rem;
+}
+
 #note-form {
     display: flex;
     flex-direction: column;
