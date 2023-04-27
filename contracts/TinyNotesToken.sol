@@ -32,7 +32,7 @@ contract TinyNotesToken is ERC20 {
         emit NoteCreated(noteIds.current(), msg.sender, _title, _content);
     }
 
-    function readNote(uint256 _noteId) public view returns (string memory title, string memory content) {
+    function readNote(uint256 _noteId) public view returns (address creator, string memory title, string memory content) {
         Note memory note = idToNote[_noteId];
         return (note.creator, note.title, note.content);
     }

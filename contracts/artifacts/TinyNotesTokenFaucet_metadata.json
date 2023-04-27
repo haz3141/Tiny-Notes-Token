@@ -128,11 +128,11 @@
 			]
 		},
 		"contracts/TinyNotesToken.sol": {
-			"keccak256": "0x083fb35ff2dc6c2255ab5480f9b7664188fe0daf4739a10585b0953906e9974e",
+			"keccak256": "0xefec273582087020e0966cf4544ae605aae1dcecac21e3742fe5f29e428bf920",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://0832a5086d8cd28967b49187d8c84fccc996f4e6c7a8bd40631bf1cbc0014be4",
-				"dweb:/ipfs/QmXqCtGz82ycpfdmgCAk8xmdjwZrXHjCbwfD2JvEY1cxfB"
+				"bzz-raw://9a2cee6a8f17c111ebb0082fe20840a7110ddc96e65c6ebf3b74c16a003783e5",
+				"dweb:/ipfs/QmXP8bdPbsLe5vF6CdXZM4NDF518PiqdCSLMZvi7A7YFyz"
 			]
 		},
 		"contracts/TinyNotesTokenFaucet.sol": {

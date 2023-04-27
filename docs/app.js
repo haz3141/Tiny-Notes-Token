@@ -58,12 +58,12 @@ window.addEventListener('load', async () => {
     document.getElementById('account').innerText = `Account: ${account}`;
 
     const tokenContractABI = await getContractABI();
-    const tokenContractAddress = '0x9FD62dC475456151c8E7e6450B7D26F9f1e0D1c2';
+    const tokenContractAddress = '0x476011Dc7fa97C9C44B64C2bf2c75C0e5A9591f5';
 
     const tokenContract = new web3.eth.Contract(tokenContractABI, tokenContractAddress);
 
     const faucetContractABI = await getFaucetContractABI();
-    const faucetContractAddress = '0x32aB18Fe0020929C7162368Be0e8140C268f48c4';
+    const faucetContractAddress = '0x1E6EE46a4D508B4f4BA5A4B1A1088F28B6fBca1c';
 
     const faucetContract = new web3.eth.Contract(faucetContractABI, faucetContractAddress);
 
