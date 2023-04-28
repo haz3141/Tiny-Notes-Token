@@ -1,172 +1,122 @@
-// Fetch and parse the ABI JSON file
-async function getContractABI() {
-  const response = await fetch("./abis/TinyNotesTokenABI.json");
-  const data = await response.json();
-  return data;
-}
+const tokenAddress = "0x476011Dc7fa97C9C44B64C2bf2c75C0e5A9591f5";
+const faucetAddress = "0x1E6EE46a4D508B4f4BA5A4B1A1088F28B6fBca1c";
 
-async function getFaucetContractABI() {
-  const response = await fetch("./abis/TinyNotesTokenFaucetABI.json");
-  const data = await response.json();
-  return data;
-}
+let web3, accounts, tntBalance, tokenContract, faucetContract;
 
-async function displayNotes(tokenContract, account) {
-  const notesContainer = document.getElementById("notes");
-  notesContainer.innerHTML = ""; // Clear the container before adding new notes
+async function initWeb3() {
+  if (typeof window.ethereum !== "undefined") {
+    web3 = new Web3(window.ethereum);
+    accounts = await web3.eth.getAccounts();
+    balance = displayBalance();
 
-  const noteCount = await tokenContract.methods.noteIds().call();
+    // Load ABIs
+    const tokenABI = await loadABI("TinyNotesTokenABI.json");
+    const faucetABI = await loadABI("TinyNotesTokenFaucetABI.json");
 
-  for (let noteId = 0; noteId <= noteCount; noteId++) {
-    try {
-      const noteData = await tokenContract.methods.readNote(noteId).call();
-      if (noteData.title !== "") {
-        const noteElement = document.createElement("div");
-        noteElement.className = "note";
-        noteElement.innerHTML = `
-            <div id="note-content-container-${noteId}" class="note-content-container">
-                <h3>${noteData.title}</h3>
-                <p>${noteData.content}</p>
-                <p>Created by: ${noteData.creator}</p>
-                <button id="update-${noteId}" class="update-button">Update</button>
-                <button id="delete-${noteId}" class="delete-button">Delete</button>
-            </div>
-        `;
+    // Initialize contracts
+    tokenContract = new web3.eth.Contract(tokenABI, tokenAddress);
+    faucetContract = new web3.eth.Contract(faucetABI, faucetAddress);
 
-        notesContainer.appendChild(noteElement);
+    document.getElementById(
+      "address"
+    ).textContent = `Connected: ${truncateAddress(accounts[0])}`;
 
-        const updateFormContainer = document.createElement("div");
-        updateFormContainer.className = "update-form-container";
-        updateFormContainer.style.display = "none";
-        updateFormContainer.setAttribute("data-noteid", noteId);
-        updateFormContainer.innerHTML = `
-            <input id="update-title-${noteId}" type="text" placeholder="Title">
-            <textarea id="update-content-${noteId}" rows="4" placeholder="Content"></textarea>
-            <button id="save-updated-note-${noteId}" class="save-updated-note">Save</button>
-            <button id="cancel-update-${noteId}" class="cancel-update">Cancel</button>
-        `;
+    // Event listeners
+    document
+      .getElementById("request-tokens")
+      .addEventListener("click", requestTokens);
+    document
+      .getElementById("create-note")
+      .addEventListener("click", createNote);
 
-        noteElement.appendChild(updateFormContainer);
+    // Toggle create note button
+    toggleCreateNoteButton(balance);
 
-        // Check if the connected account is the note author
-        if (account.toLowerCase() !== noteData.creator.toLowerCase()) {
-          noteElement.querySelector(".update-button").style.display = "none";
-          noteElement.querySelector(".delete-button").style.display = "none";
-        } else {
-          document
-            .getElementById(`update-${noteId}`)
-            .addEventListener("click", () => {
-              updateNote(noteId, tokenContract);
-            });
-
-          document
-            .getElementById(`delete-${noteId}`)
-            .addEventListener("click", () => {
-              deleteNote(noteId, tokenContract);
-            });
-        }
-      }
-    } catch (error) {
-      console.error("Error while fetching note", noteId, error);
-    }
-  }
-}
-
-async function updateNote(noteId, tokenContract) {
-  // Fetch the existing note data
-  const noteData = await tokenContract.methods.readNote(noteId).call();
-
-  // Populate the update form with the existing note data
-  document.getElementById(`update-title-${noteId}`).value = noteData.title;
-  document.getElementById(`update-content-${noteId}`).value = noteData.content;
-
-  // Hide the note content container
-  document.getElementById(`note-content-container-${noteId}`).style.display =
-    "none";
-
-  // Show the update form
-  document.querySelector(
-    `.update-form-container[data-noteid="${noteId}"]`
-  ).style.display = "block";
-}
-
-async function saveUpdatedNote(noteId, tokenContract) {
-  const updatedTitle = document.getElementById(`update-title-${noteId}`).value;
-  const updatedContent = document.getElementById(
-    `update-content-${noteId}`
-  ).value;
-
-  // Call the smart contract function to update the note on the blockchain
-  await tokenContract.methods
-    .updateNote(noteId, updatedTitle, updatedContent)
-    .send({ from: account });
-
-  // Refresh the notes display
-  await displayNotes(tokenContract, account);
-
-  // Hide the update form
-  cancelUpdate(noteId);
-}
-
-function cancelUpdate(noteId) {
-  document.querySelector(
-    `.update-form-container[data-noteid="${noteId}"]`
-  ).style.display = "none";
-}
-
-window.addEventListener("load", async () => {
-  if (window.ethereum) {
-    window.web3 = new Web3(window.ethereum);
-    await window.ethereum.enable();
-
-    // Hide the "no-metamask" message
-    document.getElementById("no-metamask").style.display = "none";
+    // Load existing notes
+    loadNotes();
   } else {
-    console.error("No web3 detected.");
-    // Show the "no-metamask" message
     document.getElementById("no-metamask").style.display = "block";
   }
+}
 
-  const accounts = await web3.eth.getAccounts();
-  const account = accounts[0];
-  document.getElementById("account").innerText = `Account: ${account}`;
+async function requestTokens() {
+  try {
+    await faucetContract.methods.requestTokens().send({ from: accounts[0] });
+    alert("Tokens successfully requested!");
+  } catch (error) {
+    console.error(error);
+    alert("Error requesting tokens. Check the console for more information.");
+  }
+}
 
-  const tokenContractABI = await getContractABI();
-  const tokenContractAddress = "0x476011Dc7fa97C9C44B64C2bf2c75C0e5A9591f5";
+async function createNote() {
+  const title = document.getElementById("title").value;
+  const content = document.getElementById("content").value;
 
-  const tokenContract = new web3.eth.Contract(
-    tokenContractABI,
-    tokenContractAddress
-  );
-
-  const faucetContractABI = await getFaucetContractABI();
-  const faucetContractAddress = "0x1E6EE46a4D508B4f4BA5A4B1A1088F28B6fBca1c";
-
-  const faucetContract = new web3.eth.Contract(
-    faucetContractABI,
-    faucetContractAddress
-  );
-
-  document.getElementById("create-note").addEventListener("click", async () => {
-    const title = document.getElementById("title").value;
-    const content = document.getElementById("content").value;
-
+  try {
     await tokenContract.methods
       .createNote(title, content)
-      .send({ from: account });
-    alert("Note created!");
+      .send({ from: accounts[0] });
+    alert("Note successfully created!");
+    loadNotes();
+  } catch (error) {
+    console.error(error);
+    alert("Error creating note. Check the console for more information.");
+  }
+}
 
-    await displayNotes(tokenContract, account);
-  });
+async function loadNotes() {
+  const notesDiv = document.getElementById("notes");
+  notesDiv.innerHTML = "";
 
-  document
-    .getElementById("request-tokens")
-    .addEventListener("click", async () => {
-      await faucetContract.methods.requestTokens().send({ from: account });
-      alert("Tokens requested!");
-    });
+  const totalNotes = await tokenContract.methods.noteIds().call();
 
-  // Add event listeners for other contract functions (e.g., readNote, updateNote, deleteNote)
+  for (let noteId = 0; noteId <= totalNotes; noteId++) {
+    const noteData = await tokenContract.methods.readNote(noteId).call();
+    const noteElement = document.createElement("div");
+    noteElement.className = "note";
+    noteElement.innerHTML = `
+            <h2 class="note-title">${noteData.title}</h2>
+            <p class="note-content">${noteData.content}</p>
+            <p class="note-creator">Created by: ${noteData.creator}</p>
+        `;
+    notesDiv.appendChild(noteElement);
+  }
+}
 
-  await displayNotes(tokenContract, account);
-});
+function truncateAddress(address) {
+  const start = address.slice(0, 6);
+  const end = address.slice(-6);
+  return `${start}...${end}`;
+}
+
+async function displayBalance() {
+  const balance = await tokenContract.methods.balanceOf(accounts[0]).call();
+  const formattedBalance = web3.utils.fromWei(balance, "ether");
+  document.getElementById("tnt-balance").textContent = formattedBalance;
+  return formattedBalance;
+}
+
+async function toggleCreateNoteButton(balance) {
+  const createNoteButton = document.getElementById("create-note");
+  if (balance > 0) {
+    createNoteButton.disabled = false;
+    createNoteButton.textContent = "Create Note";
+  } else {
+    createNoteButton.disabled = true;
+    createNoteButton.textContent = "Must hold TNT to post";
+  }
+}
+
+async function loadABI(filename) {
+  try {
+    const response = await fetch(`./abis/${filename}`);
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(`Error loading ABI: ${filename}`, error);
+  }
+}
+
+// Initialize web3 and app
+initWeb3();

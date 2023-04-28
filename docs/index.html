@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiny Notes Token</title>
+    <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div id="no-metamask" style="display: none;">
         <p>Please connect to a wallet like MetaMask to interact with this app.</p>
-      </div>
+    </div>
     <div class="header">
         <h1>Tiny Notes Token</h1>
-        <button id="request-tokens">Request Tokens</button>
+        <button id="request-tokens">TNT Faucet</button>
     </div>
-    <div id="account"></div>
+    <div id="account">
+        <div id="address"></div>
+        <div id="balance">Balance: <span id="tnt-balance">0</span> TNT</div>
+    </div>
     <div id="note-form">
         <input type="text" id="title" placeholder="Note Title">
         <textarea id="content" placeholder="Note Content"></textarea>
-        <button id="create-note">Create Note</button>
+        <button id="create-note" disabled>Create Note</button>
     </div>
-    <!-- <div id="update-form-container" style="display: none;">
-        <h2>Update Note</h2>
-        <input type="text" id="update-title" placeholder="Note Title">
-        <textarea id="update-content" placeholder="Note Content"></textarea>
-        <button id="save-updated-note">Save Note</button>
-        <button id="cancel-update">Cancel</button>
-    </div> -->
     <div id="notes"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js"></script>
     <script src="app.js"></script>
 </body>
+
 </html>
