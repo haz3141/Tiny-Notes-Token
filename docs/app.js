@@ -68,6 +68,18 @@ async function createNote() {
   }
 }
 
+async function updateNote(noteId, newTitle, newContent) {
+  try {
+    await tokenContract.methods
+      .updateNote(noteId, newTitle, newContent)
+      .send({ from: accounts[0] });
+    alert("Note updated successfully");
+    location.reload();
+  } catch (err) {
+    alert("Error updating note: " + err.message);
+  }
+}
+
 async function deleteNote(noteId) {
   try {
     await tokenContract.methods.deleteNote(noteId).send({ from: accounts[0] });
@@ -101,7 +113,7 @@ async function loadNotes() {
         updateButton.className = "update-button";
         updateButton.textContent = "Update";
         updateButton.addEventListener("click", () => {
-          // Handle updating the note here
+          openUpdateNoteModal(noteId, noteData.title, noteData.content);
         });
 
         const deleteButton = document.createElement("button");
@@ -117,6 +129,15 @@ async function loadNotes() {
 
       notesDiv.appendChild(noteElement);
     }
+  }
+}
+
+function openUpdateNoteModal(noteId, currentTitle, currentContent) {
+  const newTitle = prompt("Enter the new title:", currentTitle);
+  const newContent = prompt("Enter the new content:", currentContent);
+
+  if (newTitle && newContent) {
+    updateNote(noteId, newTitle, newContent);
   }
 }
 
