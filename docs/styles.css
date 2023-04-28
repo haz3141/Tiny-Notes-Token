@@ -110,7 +110,7 @@ button {
 .note {
     background-color: #fefac0;
     /* Yellow background for a post-it note look */
-    padding: 1.5rem;
+    padding: 1rem 1.5rem 0.5rem;
     margin-bottom: 1rem;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -145,8 +145,12 @@ button {
     margin-bottom: 0.5rem;
 }
 
-.note-content {
+.note-content, .note-creator {
     font-size: 1rem;
     white-space: pre-wrap;
     margin-bottom: 1rem;
+}
+
+.update-button {
+    margin-right: 0.5rem;
 }
