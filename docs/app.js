@@ -121,9 +121,14 @@ async function loadNotes() {
 }
 
 function truncateAddress(address) {
-  const start = address.slice(0, 6);
-  const end = address.slice(-6);
-  return `${start}...${end}`;
+  if (address !== undefined) {
+    return `${address.substring(0, 6)}...${address.substring(
+      address.length - 4,
+      address.length
+    )}`;
+  } else {
+    document.getElementById("no-metamask").style.display = "block";
+  }
 }
 
 async function displayBalance() {
