@@ -11,7 +11,7 @@
 
 <body>
     <div id="no-metamask" style="display: none;">
-        <p>Please connect to a wallet like MetaMask to interact with this app.</p>
+        <p id="error-message"></p>
     </div>
     <div class="header">
         <h1>Tiny Notes Token</h1>
@@ -24,7 +24,7 @@
     <div id="note-form">
         <input type="text" id="title" placeholder="Note Title">
         <textarea id="content" placeholder="Note Content"></textarea>
-        <button id="create-note" disabled>Create Note</button>
+        <button id="create-note" disabled>Must hold TNT to post</button>
     </div>
     <div id="notes"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js"></script>

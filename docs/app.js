@@ -5,8 +5,20 @@ let web3, accounts, tntBalance, tokenContract, faucetContract;
 
 async function initWeb3() {
   if (typeof window.ethereum !== "undefined") {
+    ethereum.autoRefreshOnNetworkChange = false;
+    ethereum.request({ method: "eth_requestAccounts" });
     web3 = new Web3(window.ethereum);
     accounts = await web3.eth.getAccounts();
+
+    // Event listener for account changes
+    window.ethereum.on("accountsChanged", () => {
+      location.reload();
+    });
+
+    // Event listener for network changes
+    window.ethereum.on("chainChanged", () => {
+      location.reload();
+    });
 
     // Load ABIs
     const tokenABI = await loadABI("TinyNotesTokenABI.json");
@@ -15,6 +27,15 @@ async function initWeb3() {
     // Initialize contracts
     tokenContract = new web3.eth.Contract(tokenABI, tokenAddress);
     faucetContract = new web3.eth.Contract(faucetABI, faucetAddress);
+
+    if (!isValidEthereumAddress(accounts[0])) {
+      showError("Connecting to MetaMask. Please unlock your wallet.");
+      document.getElementById("address").textContent =
+        "Connecting to MetaMask...";
+      document.getElementById("create-note").textContent =
+        "Must hold TNT to post";
+      return;
+    }
 
     document.getElementById(
       "address"
@@ -32,10 +53,12 @@ async function initWeb3() {
     balance = await displayBalance();
     await toggleCreateNoteButton(balance);
 
+    checkNetwork();
+
     // Load existing notes
     loadNotes();
   } else {
-    document.getElementById("no-metamask").style.display = "block";
+    showError("Please install MetaMask to use this dApp!");
   }
 }
 
@@ -148,7 +171,7 @@ function truncateAddress(address) {
       address.length
     )}`;
   } else {
-    document.getElementById("no-metamask").style.display = "block";
+    showError("Please connect MetaMask to use this dApp!");
   }
 }
 
@@ -178,6 +201,26 @@ async function loadABI(filename) {
   } catch (error) {
     console.error(`Error loading ABI: ${filename}`, error);
   }
+}
+
+async function checkNetwork() {
+  const chainId = await ethereum.request({ method: "eth_chainId" });
+  if (chainId !== "0xaa36a7") {
+    showError(
+      "Please connect to the Sepolia test network to interact with this dApp."
+    );
+  } else {
+    return true;
+  }
+}
+
+function showError(message) {
+  document.getElementById("error-message").textContent = message;
+  document.getElementById("no-metamask").style.display = "block";
+}
+
+function isValidEthereumAddress(address) {
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
 }
 
 // Initialize web3 and app
