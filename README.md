@@ -60,10 +60,12 @@ The Tiny Notes Token Faucet is a simple contract that allows users to request a 
 
 ## Screenshots
 
+### Metamask Connecting
 <p align="center">
   <img src="assets/screenshots/wallet-connect.png" width="500px" height="auto" alt="TNT Wallet Connecting" />
 </p>
 
+### TNT Loaded
 <p align="center">
   <img src="assets/screenshots/tnt-loaded.png" width="500px" height="auto" alt="TNT Loaded" />
 </p>
