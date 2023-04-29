@@ -1,9 +1,3 @@
-@media (max-width: 480px) {
-    .note-creator {
-        font-size: 12px;
-    }
-}
-
 * {
     box-sizing: border-box;
 }
@@ -152,17 +146,18 @@ button {
     margin-bottom: 0.5rem;
 }
 
-.note-content,
-.note-creator {
+.note-content {
     font-size: 1rem;
     white-space: pre-wrap;
     margin-bottom: 1rem;
 }
 
 .note-creator {
+    font-style: italic;
     word-wrap: break-word;
     word-break: break-all;
     white-space: normal;
+    margin-bottom: 1rem;
 }
 
 .update-button {
