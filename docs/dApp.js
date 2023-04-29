@@ -45,7 +45,6 @@ async function initWeb3() {
 
     if (checkNetwork()) {
       displayBalance();
-      await loadNotes();
     }
   } else {
     showError("Please install MetaMask to use this dApp!");
@@ -233,3 +232,4 @@ function showError(message) {
 
 // Initialize
 initWeb3();
+loadNotes();
