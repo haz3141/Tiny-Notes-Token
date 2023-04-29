@@ -36,7 +36,6 @@ async function initWeb3() {
       document.getElementById("create-note").textContent =
         "Must hold TNT to post";
       window.ethereum.request({ method: "eth_requestAccounts" });
-      return;
     } else {
       document.getElementById(
         "address"
