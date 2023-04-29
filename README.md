@@ -2,16 +2,6 @@
 
 Tiny Notes Token (TNT) is a decentralized application (dApp) that allows users to create, update, and delete notes on the Ethereum blockchain. To post notes with the dApp, users must hold TNT tokens. A faucet is available for users to request tokens if they hold a balance of zero.
 
-## Screenshots
-
-### Metamask Connecting
-
-<img src="assets/screenshots/wallet-connect.png" width="600px" height="auto" alt="TNT Wallet Connecting" />
-
-### TNT Loaded
-
-<img src="assets/screenshots/tnt-loaded.png" width="600px" height="auto" alt="TNT Loaded" />
-
 ## Features
 
 - Create, read, update, and delete notes
@@ -67,6 +57,16 @@ The Tiny Notes Token Faucet is a simple contract that allows users to request a 
 3.  Request TNT tokens from the faucet by clicking on the "TNT Faucet" button.
 4.  Check your TNT balance.
 5.  Create, update, and delete notes using the provided form and buttons.
+
+## Screenshots
+
+### Metamask Connecting
+
+<img src="assets/screenshots/wallet-connect.png" width="600px" height="auto" alt="TNT Wallet Connecting" />
+
+### TNT Loaded
+
+<img src="assets/screenshots/tnt-loaded.png" width="600px" height="auto" alt="TNT Loaded" />
 
 ## License
 
