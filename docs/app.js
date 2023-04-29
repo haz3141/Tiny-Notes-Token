@@ -85,9 +85,8 @@ async function createNote() {
       .createNote(title, content)
       .send({ from: accounts[0] });
     alert("Note successfully created!");
-    loadNotes().then(() => {
-      document.getElementById("note-form").reset();
-    });
+    loadNotes();
+    document.getElementById("note-form").reset();
   } catch (error) {
     console.error(error);
     alert("Error creating note. Check the console for more information.");
