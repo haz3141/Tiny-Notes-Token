@@ -45,7 +45,7 @@ async function initWeb3() {
 
     if (checkNetwork()) {
       displayBalance();
-      loadNotes();
+      await loadNotes();
     }
   } else {
     showError("Please install MetaMask to use this dApp!");
@@ -64,7 +64,7 @@ async function requestTokens() {
     requestButton.textContent = "TNT Faucet";
     requestButton.disabled = false;
 
-    await displayBalance();
+    displayBalance();
   } catch (error) {
     console.error(error);
     alert("Error requesting tokens. Check the console for more information.");
