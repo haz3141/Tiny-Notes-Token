@@ -7,6 +7,7 @@ body {
     max-width: 600px;
     margin: 0 auto;
     padding: 1rem;
+    padding-top: 0.5rem;
     background-color: #f4f4f4;
     color: #333;
 }
@@ -37,6 +38,8 @@ h1 {
     background-color: #333;
     color: #fff;
     padding: 1rem 1rem;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
 }
 
 #no-metamask {
@@ -162,4 +165,8 @@ button {
 
 .update-button {
     margin-right: 0.5rem;
+}
+
+#create-note {
+    margin-bottom: 0.5rem;
 }
