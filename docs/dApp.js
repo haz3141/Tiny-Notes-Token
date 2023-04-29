@@ -2,8 +2,7 @@ const tokenAddress = "0x476011Dc7fa97C9C44B64C2bf2c75C0e5A9591f5";
 const faucetAddress = "0x1E6EE46a4D508B4f4BA5A4B1A1088F28B6fBca1c";
 const defaultChainId = "0xaa36a7"; // Sepolia testnet
 
-let web3, accounts, tokenContract, faucetContract;
-let readyState = false;
+let web3, accounts, tokenContract, faucetContract, readyState;
 
 async function initWeb3() {
   if (typeof window.ethereum !== "undefined") {
@@ -48,6 +47,8 @@ async function initWeb3() {
       displayBalance();
       readyState = true;
     }
+
+    loadNotes();
   } else {
     showError("Please install MetaMask to use this dApp!");
   }
@@ -99,7 +100,7 @@ async function createNote() {
 }
 
 async function loadNotes() {
-  if (!readyState) {return;}
+  if (!readyState) return;
   const notesDiv = document.getElementById("notes");
   notesDiv.innerHTML = "";
 
@@ -235,4 +236,3 @@ function showError(message) {
 
 // Initialize
 initWeb3();
-loadNotes();
