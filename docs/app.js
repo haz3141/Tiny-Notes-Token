@@ -13,11 +13,13 @@ async function initWeb3() {
     // Event listener for account changes
     window.ethereum.on("accountsChanged", () => {
       location.reload();
+      checkNetwork();
     });
 
     // Event listener for network changes
     window.ethereum.on("chainChanged", () => {
       location.reload();
+      checkNetwork();
     });
 
     // Load ABIs
