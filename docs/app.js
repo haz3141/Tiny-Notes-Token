@@ -52,13 +52,18 @@ async function initWeb3() {
 }
 
 async function requestTokens() {
+  const requestButton = document.getElementById("request-tokens");
   try {
+    requestButton.disabled = true;
+    requestButton.textContent = "Requesting...";
+
     await faucetContract.methods.requestTokens().send({ from: accounts[0] });
     alert("Tokens successfully requested!");
-    // Toggle create note button
-    balance = displayBalance();
-    document.getElementById("create-note").disabled = false;
-    document.getElementById("create-note").textContent = "Create Note";
+
+    requestButton.textContent = "TNT Faucet";
+    requestButton.disabled = false;
+
+    await displayBalance();
   } catch (error) {
     console.error(error);
     alert("Error requesting tokens. Check the console for more information.");
@@ -68,14 +73,23 @@ async function requestTokens() {
 async function createNote() {
   const title = document.getElementById("title").value;
   const content = document.getElementById("content").value;
+  const createButton = document.getElementById("create-note");
+  const noteForm = document.getElementById("note-form");
 
   try {
+    createButton.disabled = true;
+    createButton.textContent = "Posting...";
+
     await tokenContract.methods
       .createNote(title, content)
       .send({ from: accounts[0] });
     alert("Note successfully created!");
-    loadNotes();
-    document.getElementById("note-form").reset();
+
+    noteForm.reset();
+    createButton.textContent = "Create Note";
+    createButton.disabled = false;
+
+    await loadNotes();
   } catch (error) {
     console.error(error);
     alert("Error creating note. Check the console for more information.");
