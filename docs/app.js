@@ -159,7 +159,7 @@ function openUpdateNoteModal(noteId, currentTitle, currentContent) {
   const newTitle = prompt("Enter the new title:", currentTitle);
   const newContent = prompt("Enter the new content:", currentContent);
 
-  if (newTitle && newContent) {
+  if (newTitle || newContent) {
     updateNote(noteId, newTitle, newContent);
   }
 }
