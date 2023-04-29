@@ -128,7 +128,7 @@ async function loadNotes() {
       noteElement.innerHTML = `
             <h2 class="note-title">${noteData.title}</h2>
             <p class="note-content">${noteData.content}</p>
-            <p class="note-creator">Created by: ${noteData.creator}</p>
+            <p class="note-creator">Posted by: ${noteData.creator}</p>
     `;
 
       if (noteData.creator.toLowerCase() === accounts[0].toLowerCase()) {

@@ -1,3 +1,9 @@
+@media (max-width: 480px) {
+    .connected-address {
+        font-size: 12px;
+    }
+}
+
 * {
     box-sizing: border-box;
 }
@@ -63,7 +69,8 @@ h1 {
     flex-wrap: wrap;
 }
 
-#address, #balance {
+#address,
+#balance {
     margin: 0.5rem 0;
 }
 
@@ -145,10 +152,17 @@ button {
     margin-bottom: 0.5rem;
 }
 
-.note-content, .note-creator {
+.note-content,
+.note-creator {
     font-size: 1rem;
     white-space: pre-wrap;
     margin-bottom: 1rem;
+}
+
+.note-creator {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
 }
 
 .update-button {
