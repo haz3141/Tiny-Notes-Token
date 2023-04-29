@@ -10,18 +10,6 @@ async function initWeb3() {
     web3 = new Web3(window.ethereum);
     accounts = await web3.eth.getAccounts();
 
-    // Event listener for account changes
-    window.ethereum.on("accountsChanged", () => {
-      location.reload();
-      checkNetwork();
-    });
-
-    // Event listener for network changes
-    window.ethereum.on("chainChanged", () => {
-      location.reload();
-      checkNetwork();
-    });
-
     // Load ABIs
     const tokenABI = await loadABI("TinyNotesTokenABI.json");
     const faucetABI = await loadABI("TinyNotesTokenFaucetABI.json");
@@ -51,11 +39,13 @@ async function initWeb3() {
       .getElementById("create-note")
       .addEventListener("click", createNote);
 
+    // Event listener for account and network changes
+    window.ethereum.on("accountsChanged", location.reload());
+    window.ethereum.on("chainChanged", location.reload());
+
     // Toggle create note button
     balance = await displayBalance();
     await toggleCreateNoteButton(balance);
-
-    checkNetwork();
 
     // Load existing notes
     loadNotes();
@@ -229,3 +219,4 @@ function isValidEthereumAddress(address) {
 
 // Initialize web3 and app
 initWeb3();
+checkNetwork();
