@@ -1,14 +1,14 @@
 const tokenAddress = "0x476011Dc7fa97C9C44B64C2bf2c75C0e5A9591f5";
 const faucetAddress = "0x1E6EE46a4D508B4f4BA5A4B1A1088F28B6fBca1c";
 
-let web3, accounts, tntBalance, tokenContract, faucetContract;
+let web3, accounts, tokenContract, faucetContract;
 
 async function initWeb3() {
   if (typeof window.ethereum !== "undefined") {
-    ethereum.autoRefreshOnNetworkChange = false;
-    ethereum.request({ method: "eth_requestAccounts" });
     web3 = new Web3(window.ethereum);
     accounts = await web3.eth.getAccounts();
+
+    window.ethereum.request({ method: "eth_requestAccounts" });
 
     // Load ABIs
     const tokenABI = await loadABI("TinyNotesTokenABI.json");
@@ -44,24 +44,28 @@ async function initWeb3() {
     window.ethereum.on("chainChanged", location.reload());
 
     // Toggle create note button
-    balance = await displayBalance();
-    await toggleCreateNoteButton(balance);
+    await displayBalance();
 
     // Load existing notes
-    loadNotes();
+    await loadNotes();
   } else {
     showError("Please install MetaMask to use this dApp!");
   }
 }
 
 async function requestTokens() {
+  const requestButton = document.getElementById("request-tokens");
   try {
+    requestButton.disabled = true;
+    requestButton.textContent = "Requesting...";
+
     await faucetContract.methods.requestTokens().send({ from: accounts[0] });
     alert("Tokens successfully requested!");
-    // Toggle create note button
-    balance = displayBalance();
-    document.getElementById("create-note").disabled = false;
-    document.getElementById("create-note").textContent = "Create Note";
+
+    requestButton.textContent = "TNT Faucet";
+    requestButton.disabled = false;
+
+    await displayBalance();
   } catch (error) {
     console.error(error);
     alert("Error requesting tokens. Check the console for more information.");
@@ -71,39 +75,26 @@ async function requestTokens() {
 async function createNote() {
   const title = document.getElementById("title").value;
   const content = document.getElementById("content").value;
+  const createButton = document.getElementById("create-note");
+  const noteForm = document.getElementById("note-form");
 
   try {
+    createButton.disabled = true;
+    createButton.textContent = "Posting...";
+
     await tokenContract.methods
       .createNote(title, content)
       .send({ from: accounts[0] });
     alert("Note successfully created!");
-    loadNotes();
-    document.getElementById("note-form").reset();
+
+    noteForm.reset();
+    createButton.textContent = "Create Note";
+    createButton.disabled = false;
+
+    await loadNotes();
   } catch (error) {
     console.error(error);
     alert("Error creating note. Check the console for more information.");
-  }
-}
-
-async function updateNote(noteId, newTitle, newContent) {
-  try {
-    await tokenContract.methods
-      .updateNote(noteId, newTitle, newContent)
-      .send({ from: accounts[0] });
-    alert("Note updated successfully");
-    location.reload();
-  } catch (err) {
-    alert("Error updating note: " + err.message);
-  }
-}
-
-async function deleteNote(noteId) {
-  try {
-    await tokenContract.methods.deleteNote(noteId).send({ from: accounts[0] });
-    alert("Note deleted successfully");
-    location.reload();
-  } catch (err) {
-    alert("Error deleting note: " + err.message);
   }
 }
 
@@ -113,17 +104,17 @@ async function loadNotes() {
 
   const totalNotes = await tokenContract.methods.noteIds().call();
 
-  for (let noteId = 0; noteId <= totalNotes; noteId++) {
+  for (let noteId = totalNotes; noteId >= 0; noteId--) {
     const noteData = await tokenContract.methods.readNote(noteId).call();
 
     if (noteData.title !== "") {
       const noteElement = document.createElement("div");
       noteElement.className = "note";
       noteElement.innerHTML = `
-            <h2 class="note-title">${noteData.title}</h2>
-            <p class="note-content">${noteData.content}</p>
-            <p class="note-creator">Posted by: ${noteData.creator}</p>
-    `;
+        <h2 class="note-title">${noteData.title}</h2>
+        <p class="note-content">${noteData.content}</p>
+        <p class="note-creator">Posted by: ${noteData.creator}</p>
+      `;
 
       if (noteData.creator.toLowerCase() === accounts[0].toLowerCase()) {
         const updateButton = document.createElement("button");
@@ -149,6 +140,67 @@ async function loadNotes() {
   }
 }
 
+async function updateNote(noteId, newTitle, newContent) {
+  try {
+    await tokenContract.methods
+      .updateNote(noteId, newTitle, newContent)
+      .send({ from: accounts[0] });
+    alert("Note updated successfully");
+    location.reload();
+  } catch (err) {
+    alert("Error updating note: " + err.message);
+  }
+}
+
+async function deleteNote(noteId) {
+  try {
+    await tokenContract.methods.deleteNote(noteId).send({ from: accounts[0] });
+    alert("Note deleted successfully");
+    await loadNotes();
+  } catch (err) {
+    alert("Error deleting note: " + err.message);
+  }
+}
+
+async function displayBalance() {
+  const balance = await tokenContract.methods.balanceOf(accounts[0]).call();
+  const formattedBalance = web3.utils.fromWei(balance, "ether");
+  document.getElementById("tnt-balance").textContent = formattedBalance;
+  toggleCreateNoteButton(formattedBalance);
+}
+
+async function checkNetwork() {
+  const chainId = await ethereum.request({ method: "eth_chainId" });
+  if (chainId !== "0xaa36a7") {
+    showError(
+      "Please connect to the Sepolia test network to interact with this dApp."
+    );
+  } else {
+    return true;
+  }
+}
+
+async function loadABI(filename) {
+  try {
+    const response = await fetch(`./abis/${filename}`);
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(`Error loading ABI: ${filename}`, error);
+  }
+}
+
+function toggleCreateNoteButton(balance) {
+  const createNoteButton = document.getElementById("create-note");
+  if (balance > 0) {
+    createNoteButton.disabled = false;
+    createNoteButton.textContent = "Create Note";
+  } else {
+    createNoteButton.disabled = true;
+    createNoteButton.textContent = "Must hold TNT to post";
+  }
+}
+
 function openUpdateNoteModal(noteId, currentTitle, currentContent) {
   const newTitle = prompt("Enter the new title:", currentTitle);
   const newContent = prompt("Enter the new content:", currentContent);
@@ -169,43 +221,8 @@ function truncateAddress(address) {
   }
 }
 
-async function displayBalance() {
-  const balance = await tokenContract.methods.balanceOf(accounts[0]).call();
-  const formattedBalance = web3.utils.fromWei(balance, "ether");
-  document.getElementById("tnt-balance").textContent = formattedBalance;
-  return formattedBalance;
-}
-
-async function toggleCreateNoteButton(balance) {
-  const createNoteButton = document.getElementById("create-note");
-  if (balance > 0) {
-    createNoteButton.disabled = false;
-    createNoteButton.textContent = "Create Note";
-  } else {
-    createNoteButton.disabled = true;
-    createNoteButton.textContent = "Must hold TNT to post";
-  }
-}
-
-async function loadABI(filename) {
-  try {
-    const response = await fetch(`./abis/${filename}`);
-    const json = await response.json();
-    return json;
-  } catch (error) {
-    console.error(`Error loading ABI: ${filename}`, error);
-  }
-}
-
-async function checkNetwork() {
-  const chainId = await ethereum.request({ method: "eth_chainId" });
-  if (chainId !== "0xaa36a7") {
-    showError(
-      "Please connect to the Sepolia test network to interact with this dApp."
-    );
-  } else {
-    return true;
-  }
+function isValidEthereumAddress(address) {
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
 }
 
 function showError(message) {
@@ -213,10 +230,6 @@ function showError(message) {
   document.getElementById("no-metamask").style.display = "block";
 }
 
-function isValidEthereumAddress(address) {
-  return /^0x[a-fA-F0-9]{40}$/.test(address);
-}
-
-// Initialize web3 and app
+// Initialize App
 initWeb3();
 checkNetwork();
