@@ -3,6 +3,7 @@ const faucetAddress = "0x1E6EE46a4D508B4f4BA5A4B1A1088F28B6fBca1c";
 const defaultChainId = "0xaa36a7"; // Sepolia testnet
 
 let web3, accounts, tokenContract, faucetContract;
+let readyState = false;
 
 async function initWeb3() {
   if (typeof window.ethereum !== "undefined") {
@@ -45,6 +46,7 @@ async function initWeb3() {
 
     if (checkNetwork()) {
       displayBalance();
+      readyState = true;
     }
   } else {
     showError("Please install MetaMask to use this dApp!");
@@ -89,7 +91,7 @@ async function createNote() {
     createButton.textContent = "Create Note";
     createButton.disabled = false;
 
-    await loadNotes();
+    loadNotes();
   } catch (error) {
     console.error(error);
     alert("Error creating note. Check the console for more information.");
@@ -97,6 +99,7 @@ async function createNote() {
 }
 
 async function loadNotes() {
+  if (!readyState) {return;}
   const notesDiv = document.getElementById("notes");
   notesDiv.innerHTML = "";
 
@@ -125,8 +128,8 @@ async function loadNotes() {
         const deleteButton = document.createElement("button");
         deleteButton.className = "delete-button";
         deleteButton.textContent = "Delete";
-        deleteButton.addEventListener("click", async () => {
-          await deleteNote(noteId);
+        deleteButton.addEventListener("click", () => {
+          deleteNote(noteId);
         });
 
         noteElement.appendChild(updateButton);
