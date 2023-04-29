@@ -1,5 +1,6 @@
 const tokenAddress = "0x476011Dc7fa97C9C44B64C2bf2c75C0e5A9591f5";
 const faucetAddress = "0x1E6EE46a4D508B4f4BA5A4B1A1088F28B6fBca1c";
+const defaultChainId = "0xaa36a7"; // Sepolia testnet
 
 let web3, accounts, tokenContract, faucetContract;
 
@@ -179,7 +180,7 @@ async function loadABI(filename) {
 
 async function checkNetwork() {
   const chainId = await ethereum.request({ method: "eth_chainId" });
-  if (chainId !== "0xaa36a7") {
+  if (chainId !== defaultChainId) {
     showError(
       "Please connect to the Sepolia test network to interact with this dApp."
     );
