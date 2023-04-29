@@ -85,11 +85,10 @@ async function createNote() {
       .createNote(title, content)
       .send({ from: accounts[0] });
     alert("Note successfully created!");
-
-    document.getElementById("title").placeholder = "Note Title";
-    document.getElementById("content").placeholder = "Note Content";
-
     loadNotes();
+
+    // Reset the form
+    document.getElementById("note-form").reset();
   } catch (error) {
     console.error(error);
     alert("Error creating note. Check the console for more information.");
