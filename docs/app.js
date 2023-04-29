@@ -8,8 +8,6 @@ async function initWeb3() {
     web3 = new Web3(window.ethereum);
     accounts = await web3.eth.getAccounts();
 
-    window.ethereum.request({ method: "eth_requestAccounts" });
-
     // Load ABIs
     const tokenABI = await loadABI("TinyNotesTokenABI.json");
     const faucetABI = await loadABI("TinyNotesTokenFaucetABI.json");
@@ -17,19 +15,6 @@ async function initWeb3() {
     // Initialize contracts
     tokenContract = new web3.eth.Contract(tokenABI, tokenAddress);
     faucetContract = new web3.eth.Contract(faucetABI, faucetAddress);
-
-    if (!isValidEthereumAddress(accounts[0])) {
-      showError("Connecting to MetaMask. Please unlock your wallet.");
-      document.getElementById("address").textContent =
-        "Connecting to MetaMask...";
-      document.getElementById("create-note").textContent =
-        "Must hold TNT to post";
-      return;
-    }
-
-    document.getElementById(
-      "address"
-    ).textContent = `Connected: ${truncateAddress(accounts[0])}`;
 
     // Event listeners
     document
@@ -40,32 +25,40 @@ async function initWeb3() {
       .addEventListener("click", createNote);
 
     // Event listener for account and network changes
-    window.ethereum.on("accountsChanged", location.reload());
-    window.ethereum.on("chainChanged", location.reload());
+    window.ethereum.on("accountsChanged", () => { location.reload() });
+    window.ethereum.on("chainChanged", () => { location.reload() });
 
-    // Toggle create note button
-    await displayBalance();
+    if (!isValidEthereumAddress(accounts[0])) {
+      showError("Connecting to MetaMask. Please unlock your wallet.");
+      document.getElementById("address").textContent =
+        "Connecting to MetaMask...";
+      document.getElementById("create-note").textContent =
+        "Must hold TNT to post";
+      window.ethereum.request({ method: "eth_requestAccounts" });
+      return;
+    } else {
+      document.getElementById(
+        "address"
+      ).textContent = `Connected: ${truncateAddress(accounts[0])}`;
+    }
 
-    // Load existing notes
-    await loadNotes();
+    if (checkNetwork()) {
+      displayBalance();
+      loadNotes();
+    }
   } else {
     showError("Please install MetaMask to use this dApp!");
   }
 }
 
 async function requestTokens() {
-  const requestButton = document.getElementById("request-tokens");
   try {
-    requestButton.disabled = true;
-    requestButton.textContent = "Requesting...";
-
     await faucetContract.methods.requestTokens().send({ from: accounts[0] });
     alert("Tokens successfully requested!");
-
-    requestButton.textContent = "TNT Faucet";
-    requestButton.disabled = false;
-
-    await displayBalance();
+    // Toggle create note button
+    balance = displayBalance();
+    document.getElementById("create-note").disabled = false;
+    document.getElementById("create-note").textContent = "Create Note";
   } catch (error) {
     console.error(error);
     alert("Error requesting tokens. Check the console for more information.");
@@ -75,23 +68,14 @@ async function requestTokens() {
 async function createNote() {
   const title = document.getElementById("title").value;
   const content = document.getElementById("content").value;
-  const createButton = document.getElementById("create-note");
-  const noteForm = document.getElementById("note-form");
 
   try {
-    createButton.disabled = true;
-    createButton.textContent = "Posting...";
-
     await tokenContract.methods
       .createNote(title, content)
       .send({ from: accounts[0] });
     alert("Note successfully created!");
-
-    noteForm.reset();
-    createButton.textContent = "Create Note";
-    createButton.disabled = false;
-
-    await loadNotes();
+    loadNotes();
+    document.getElementById("note-form").reset();
   } catch (error) {
     console.error(error);
     alert("Error creating note. Check the console for more information.");
@@ -156,7 +140,7 @@ async function deleteNote(noteId) {
   try {
     await tokenContract.methods.deleteNote(noteId).send({ from: accounts[0] });
     alert("Note deleted successfully");
-    await loadNotes();
+    location.reload();
   } catch (err) {
     alert("Error deleting note: " + err.message);
   }
@@ -169,17 +153,6 @@ async function displayBalance() {
   toggleCreateNoteButton(formattedBalance);
 }
 
-async function checkNetwork() {
-  const chainId = await ethereum.request({ method: "eth_chainId" });
-  if (chainId !== "0xaa36a7") {
-    showError(
-      "Please connect to the Sepolia test network to interact with this dApp."
-    );
-  } else {
-    return true;
-  }
-}
-
 async function loadABI(filename) {
   try {
     const response = await fetch(`./abis/${filename}`);
@@ -187,6 +160,19 @@ async function loadABI(filename) {
     return json;
   } catch (error) {
     console.error(`Error loading ABI: ${filename}`, error);
+  }
+}
+
+async function checkNetwork() {
+  const chainId = await ethereum.request({ method: "eth_chainId" });
+  if (chainId !== "0xaa36a7") {
+    showError(
+      "Please connect to the Sepolia test network to interact with this dApp."
+    );
+    document.getElementById("address").textContent =
+      "Please connect to MetaMask...";
+  } else {
+    return true;
   }
 }
 
@@ -230,6 +216,5 @@ function showError(message) {
   document.getElementById("no-metamask").style.display = "block";
 }
 
-// Initialize App
+// Initialize
 initWeb3();
-checkNetwork();
