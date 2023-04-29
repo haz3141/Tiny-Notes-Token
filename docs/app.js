@@ -68,7 +68,8 @@ async function requestTokens() {
     alert("Tokens successfully requested!");
     // Toggle create note button
     balance = displayBalance();
-    toggleCreateNoteButton(balance);
+    document.getElementById("create-note").disabled = false;
+    document.getElementById("create-note").textContent = "Create Note";
   } catch (error) {
     console.error(error);
     alert("Error requesting tokens. Check the console for more information.");
