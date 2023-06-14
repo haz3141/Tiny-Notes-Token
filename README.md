@@ -1,6 +1,6 @@
 # Tiny Notes Token (TNT)
 
-Tiny Notes Token (TNT) is a decentralized application (dApp) that allows users to create, update, and delete notes on the Ethereum blockchain. To post notes with the dApp, users must hold TNT tokens. A faucet is available for users to request tokens if they hold a balance of zero.
+Tiny Notes Token (TNT) is a decentralized application (dApp) that allows users to create, read, update, and delete notes on the Ethereum blockchain. To post notes with the dApp, users must hold TNT tokens. A faucet is available for users to request tokens if they hold a balance of zero.
 
 ## Live Demo
 
